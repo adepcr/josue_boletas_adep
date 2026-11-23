@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADEP · Documentos</title>
+  <meta name="theme-color" content="#148c4c">
+  <meta name="description" content="Documentos institucionales de ADEP.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/boleta.css">
+</head>
+<body>
+
+  <!-- ENCABEZADO (visible en todas las pantallas) -->
+  <header class="encabezado">
+    <div class="encabezado__contenido">
+      <img class="encabezado__logo" src="assets/logo-blanco.png" alt="Logotipo de ADEP">
+      <div>
+        <p class="encabezado__nombre">ADEP</p>
+        <p class="encabezado__sub">Asociación de Educadores Pensionados</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="contenedor">
+
+    <!-- PANTALLA 1: INICIO -->
+    <section id="pantalla-inicio" class="pantalla pantalla--activa" aria-labelledby="titulo-inicio">
+      <h1 id="titulo-inicio" tabindex="-1">Sistema de documentos</h1>
+      <p class="texto-guia">
+        Complete sus documentos institucionales desde aquí, sin tener que desplazarse a la oficina.
+        Guarde sus documentos en este dispositivo y vuelva a consultarlos cuando lo necesite.
+      </p>
+      <button type="button" class="boton boton--principal" data-ir="pantalla-plantillas">
+        <svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5"/></svg>
+        Crear documento
+      </button>
+
+      <section class="documentos-guardados" aria-labelledby="titulo-guardados">
+        <h2 id="titulo-guardados">Documentos guardados</h2>
+        <div class="panel-herramientas">
+          <div class="herramientas-documentos">
+            <label class="campo-busqueda campo-busqueda--documentos">
+              <span class="sr-only">Buscar documentos</span>
+              <input id="buscar-documentos" type="search" placeholder="Buscar por nombre, área o fecha" autocomplete="off">
+            </label>
+            <label class="filtro-documentos">
+              <span class="filtro-documentos__etiqueta">Mostrar</span>
+              <span class="sr-only">Filtrar documentos</span>
+              <select id="filtro-documentos">
+                <option value="todos">Todos los documentos</option>
+                <option value="horas-extras">Boletas de horas extras</option>
+                <option value="personalizada">Documentos de plantillas</option>
+              </select>
+            </label>
+          </div>
+          <section class="panel-respaldo" aria-labelledby="titulo-respaldo">
+            <div class="panel-respaldo__marca" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/>
+              </svg>
+            </div>
+            <div class="panel-respaldo__texto">
+              <h3 id="titulo-respaldo">Copia de seguridad</h3>
+              <p>Guarda o recupera tus documentos y plantillas en este dispositivo.</p>
+            </div>
+            <div class="acciones-respaldo" aria-label="Acciones de copia de seguridad">
+              <button type="button" class="respaldo-accion respaldo-accion--exportar" id="exportar-respaldo">
+                <svg class="respaldo-accion__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/>
+                </svg>
+                Exportar
+              </button>
+              <button type="button" class="respaldo-accion" id="importar-respaldo">
+                <svg class="respaldo-accion__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 16V5m0 0 4 4m-4-4L8 9M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/>
+                </svg>
+                Importar
+              </button>
+              <input type="file" id="archivo-respaldo" accept="application/json,.json" hidden>
+            </div>
+          </section>
+        </div>
+        <p class="ayuda-respaldo">Al importar, se combinan los datos con los que ya existen.</p>
+        <p id="estado-documentos" class="estado-documentos" aria-live="polite"></p>
+        <div id="lista-documentos" class="lista-documentos" aria-live="polite"></div>
+      </section>
+    </section>
+
+    <!-- PANTALLA 2: ELEGIR PLANTILLA -->
+    <section id="pantalla-plantillas" class="pantalla" aria-labelledby="titulo-plantillas">
+      <h1 id="titulo-plantillas" tabindex="-1">Elija una plantilla</h1>
+      <p class="texto-guia">Seleccione el tipo de documento que desea completar. Marque la estrella para dejar sus favoritas al principio.</p>
+
+      <div class="tarjetas">
+        <div class="tarjeta-favorita-item" data-favorita-predeterminada="horas-extras">
+          <button type="button" class="tarjeta tarjeta--favoritable" data-plantilla="horas-extras" data-ir="pantalla-editor">
+            <span class="tarjeta__titulo">Boleta para horas extras</span>
+            <span class="tarjeta__texto">Solicitud de autorización de horas extras.</span>
+          </button>
+          <button type="button" class="boton-favorito-predeterminado" data-accion-favorito-predeterminado aria-label="Agregar Boleta para horas extras a favoritos" aria-pressed="false">
+            <svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg>
+          </button>
+        </div>
+        <button type="button" class="tarjeta tarjeta--nueva" id="crear-plantilla" aria-label="Crear una plantilla nueva">
+          <span class="tarjeta__mas" aria-hidden="true"><svg class="icono-ui" viewBox="0 0 24 24" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span>
+          <span class="tarjeta__titulo">Crear plantilla</span>
+        </button>
+      </div>
+      <section class="plantillas-personalizadas" aria-labelledby="titulo-plantillas-personalizadas">
+        <h2 id="titulo-plantillas-personalizadas">Mis plantillas</h2>
+        <label class="campo-busqueda campo-busqueda--plantillas">
+          <span class="sr-only">Buscar plantillas</span>
+          <input id="buscar-plantillas" type="search" placeholder="Buscar una plantilla" autocomplete="off">
+        </label>
+        <p id="estado-plantillas" class="estado-documentos" aria-live="polite"></p>
+        <div class="tarjetas" id="lista-plantillas-personalizadas"></div>
+      </section>
+
+      <button type="button" class="boton boton--secundario" data-ir="pantalla-inicio">Volver</button>
+    </section>
+
+    <section id="pantalla-ejemplos-plantilla" class="pantalla" aria-labelledby="titulo-ejemplos-plantilla">
+      <h1 id="titulo-ejemplos-plantilla" tabindex="-1">Elija cómo empezar</h1>
+      <p class="texto-guia">Use un ejemplo con una estructura lista para adaptar, o comience con una hoja en blanco. Sus favoritos aparecerán primero.</p>
+      <div class="tarjetas">
+        <div class="tarjeta-favorita-item" data-favorita-predeterminada="horas-extras">
+          <button type="button" class="tarjeta tarjeta--favoritable" data-plantilla-inicial="horas-extras">
+            <span class="tarjeta__titulo">Solicitud de horas extras</span>
+            <span class="tarjeta__texto">Incluye datos del funcionario, horario, justificación y espacios de autorización.</span>
+            <span class="tarjeta__indicacion">Editar este modelo<svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></span>
+          </button>
+          <button type="button" class="boton-favorito-predeterminado" data-accion-favorito-predeterminado aria-label="Agregar Solicitud de horas extras a favoritos" aria-pressed="false">
+            <svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg>
+          </button>
+        </div>
+        <div class="tarjeta-favorita-item" data-favorita-predeterminada="permiso">
+          <button type="button" class="tarjeta tarjeta--favoritable" data-plantilla-inicial="permiso">
+            <span class="tarjeta__titulo">Solicitud de permiso</span>
+            <span class="tarjeta__texto">Una base para indicar fechas, motivo y firmas de aprobación.</span>
+            <span class="tarjeta__indicacion">Editar este modelo<svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></span>
+          </button>
+          <button type="button" class="boton-favorito-predeterminado" data-accion-favorito-predeterminado aria-label="Agregar Solicitud de permiso a favoritos" aria-pressed="false">
+            <svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg>
+          </button>
+        </div>
+        <div class="tarjeta-favorita-item" data-favorita-predeterminada="solicitud">
+          <button type="button" class="tarjeta tarjeta--favoritable" data-plantilla-inicial="solicitud">
+            <span class="tarjeta__titulo">Solicitud general</span>
+            <span class="tarjeta__texto">Estructura sencilla para presentar una solicitud a la asociación.</span>
+            <span class="tarjeta__indicacion">Editar este modelo<svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></span>
+          </button>
+          <button type="button" class="boton-favorito-predeterminado" data-accion-favorito-predeterminado aria-label="Agregar Solicitud general a favoritos" aria-pressed="false">
+            <svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg>
+          </button>
+        </div>
+        <button type="button" class="tarjeta tarjeta--nueva" data-plantilla-inicial="blanco">
+          <span class="tarjeta__mas" aria-hidden="true"><svg class="icono-ui" viewBox="0 0 24 24" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span>
+          <span class="tarjeta__titulo">Empezar en blanco</span>
+          <span class="tarjeta__texto">Diseñe su plantilla agregando cada elemento paso a paso.</span>
+        </button>
+      </div>
+      <button type="button" class="boton boton--secundario" data-ir="pantalla-plantillas">Volver a mis plantillas</button>
+    </section>
+
+    <section id="pantalla-crear-plantilla" class="pantalla" aria-labelledby="titulo-crear-plantilla">
+      <h1 id="titulo-crear-plantilla" tabindex="-1">Diseñar plantilla</h1>
+      <p class="texto-guia">Personalice el nombre y los campos. Puede cambiar el orden, estilo y tamaño en cualquier momento.</p>
+      <form id="formulario-plantilla" class="creador-plantilla" autocomplete="off">
+        <div class="editor__formulario">
+          <div class="campo-form">
+            <label for="nombre-plantilla">Nombre de la plantilla</label>
+            <input id="nombre-plantilla" type="text" maxlength="60" required placeholder="Ej. Solicitud de permiso">
+          </div>
+          <fieldset class="selector-papel">
+            <legend>Tamaño del documento</legend>
+            <label><input type="radio" name="papel-plantilla" value="media" checked> Media hoja · un molde</label>
+            <label><input type="radio" name="papel-plantilla" value="duplicado"> Media hoja · dos copias</label>
+            <label><input type="radio" name="papel-plantilla" value="carta"> Hoja completa · carta</label>
+          </fieldset>
+          <div class="campo-form campo-espaciado-plantilla">
+            <label for="espaciado-plantilla">Espacio entre elementos <output id="valor-espaciado-plantilla" for="espaciado-plantilla">2 mm</output></label>
+            <input id="espaciado-plantilla" type="range" min="0" max="10" step="1" value="2">
+            <p>Ajústelo para acercar o separar los campos en la vista previa y el documento final.</p>
+          </div>
+          <fieldset class="ajustes-diseno">
+            <legend>Diseño de página</legend>
+            <div class="campo-form campo-ajuste-diseno">
+              <label for="margen-superior-plantilla">Margen superior <output id="valor-margen-superior" for="margen-superior-plantilla">28 mm</output></label>
+              <input id="margen-superior-plantilla" type="range" min="12" max="55" step="1" value="28">
+            </div>
+            <div class="campo-form campo-ajuste-diseno">
+              <label for="margen-lateral-plantilla">Márgenes laterales <output id="valor-margen-lateral" for="margen-lateral-plantilla">10 mm</output></label>
+              <input id="margen-lateral-plantilla" type="range" min="5" max="30" step="1" value="10">
+            </div>
+            <div class="campo-form campo-ajuste-diseno">
+              <label for="margen-inferior-plantilla">Margen inferior <output id="valor-margen-inferior" for="margen-inferior-plantilla">8 mm</output></label>
+              <input id="margen-inferior-plantilla" type="range" min="4" max="30" step="1" value="8">
+            </div>
+            <div class="campo-form campo-ajuste-diseno">
+              <label for="tamano-texto-plantilla">Tamaño general del texto <output id="valor-tamano-texto" for="tamano-texto-plantilla">10 pt</output></label>
+              <input id="tamano-texto-plantilla" type="range" min="8" max="14" step="1" value="10">
+            </div>
+            <p>Los cambios se aplican de inmediato a la vista previa y al PDF.</p>
+          </fieldset>
+          <fieldset class="opciones-logo">
+            <legend>Logotipo ADEP</legend>
+            <label id="etq-tamano-logo">Tamaño</label>
+            <div class="selector selector--creador" data-tipo="lista" data-opciones="Pequeño|Mediano|Grande" data-valores="pequeno|mediano|grande">
+              <input type="hidden" id="tamano-logo" value="mediano">
+              <button type="button" class="selector__boton selector__boton--lista" aria-labelledby="etq-tamano-logo" aria-haspopup="listbox" data-vacio="Elegir tamaño"></button>
+            </div>
+            <label id="etq-posicion-logo">Ubicación</label>
+            <div class="selector selector--creador" data-tipo="lista" data-opciones="Esquina superior izquierda|Esquina superior derecha|Fondo transparente" data-valores="izquierda|derecha|fondo">
+              <input type="hidden" id="posicion-logo" value="izquierda">
+              <button type="button" class="selector__boton selector__boton--lista" aria-labelledby="etq-posicion-logo" aria-haspopup="listbox" data-vacio="Elegir ubicación"></button>
+            </div>
+          </fieldset>
+          <div class="campo-form campo-form--agregar-bloque">
+            <label id="etq-tipo-bloque">Agregar elemento</label>
+            <div class="agregar-bloque">
+              <div class="selector selector--creador agregar-bloque__selector" data-tipo="lista" data-orden="natural" data-opciones="Título|Subtítulo|Encabezado de sección|Texto para completar|Campo con raya|Dos campos: izquierda y derecha" data-valores="titulo|subtitulo|seccion|texto|linea|doble">
+                <input type="hidden" id="tipo-bloque" value="titulo">
+                <button type="button" class="selector__boton selector__boton--lista" aria-labelledby="etq-tipo-bloque" aria-haspopup="listbox" data-vacio="Elegir elemento"></button>
+              </div>
+              <button type="button" class="boton boton--principal" id="agregar-bloque"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Agregar</button>
+            </div>
+            <p id="aviso-limite-bloques" class="form-aviso" aria-live="polite"></p>
+          </div>
+          <div id="lista-bloques-plantilla" class="lista-bloques" aria-live="polite"></div>
+          <section class="ajustes-elemento" aria-labelledby="titulo-ajustes-elemento">
+            <h3 id="titulo-ajustes-elemento">Elemento seleccionado</h3>
+            <p id="ayuda-seleccion-elemento" class="ayuda-seleccion-elemento">Seleccione un elemento en la vista previa o en esta lista para ajustar su tamaño y alineación.</p>
+            <label class="campo-ajuste-diseno" for="tamano-elemento-plantilla">
+              <span>Tamaño del elemento <output id="valor-tamano-elemento" for="tamano-elemento-plantilla">9.5 pt</output></span>
+              <input id="tamano-elemento-plantilla" type="range" min="6" max="24" step="0.5" value="9.5" disabled>
+            </label>
+            <div class="control-alineacion">
+              <span>Alineación</span>
+              <div role="group" aria-label="Alineación del elemento">
+                <button type="button" class="boton-alineacion" data-alinear="left" aria-label="Alinear a la izquierda" title="Izquierda" disabled><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 3v18M5 7h14M5 12h10M5 17h14"/></svg></button>
+                <button type="button" class="boton-alineacion" data-alinear="center" aria-label="Centrar" title="Centrar" disabled><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v18M5 7h14M7 12h10M5 17h14"/></svg></button>
+                <button type="button" class="boton-alineacion" data-alinear="right" aria-label="Alinear a la derecha" title="Derecha" disabled><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 3v18M5 7h14M9 12h10M5 17h14"/></svg></button>
+              </div>
+            </div>
+            <div class="posicion-elemento">
+              <span>Posición en el documento</span>
+              <div>
+                <button type="button" class="boton boton--secundario" id="subir-elemento" disabled><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20V5m0 0 6 6m-6-6-6 6"/></svg>Subir</button>
+                <button type="button" class="boton boton--secundario" id="bajar-elemento" disabled><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v15m0 0 6-6m-6 6-6-6"/></svg>Bajar</button>
+              </div>
+            </div>
+          </section>
+          <p class="ayuda-editor-plantilla">Consejo: use títulos para organizar el documento y campos para los datos que cambiarán cada vez que lo use.</p>
+        </div>
+        <div class="editor__vista">
+          <h2>Vista previa del molde</h2>
+          <div class="vista-personalizada-contenedor vista-personalizada-contenedor--molde" id="vista-molde-contenedor">
+            <div id="vista-plantilla-creador"></div>
+          </div>
+          <p class="texto-guia">La nota no se agrega al molde; el borde inferior marca el final de la hoja.</p>
+        </div>
+        <div class="barra-acciones">
+          <button type="button" class="boton boton--secundario" data-ir="pantalla-plantillas">Cancelar</button>
+          <button type="submit" class="boton boton--principal" id="guardar-plantilla"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 3h12l4 4v14H3V3h2Z"/><path d="M7 3v6h10V3M7 21v-8h10v8"/></svg>Guardar plantilla</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="pantalla-editor-personalizada" class="pantalla" aria-labelledby="titulo-documento-personalizado">
+      <h1 id="titulo-documento-personalizado" tabindex="-1">Completar documento</h1>
+      <div class="editor">
+        <div class="editor__formulario">
+          <h2 id="nombre-documento-personalizado">Datos del documento</h2>
+          <form id="formulario-documento-personalizado" autocomplete="off"></form>
+        </div>
+        <div class="editor__vista">
+          <h2>Vista previa</h2>
+          <div class="vista-personalizada-contenedor" id="vista-personalizada-contenedor">
+            <div id="vista-personalizada"></div>
+          </div>
+        </div>
+      </div>
+      <div class="barra-acciones">
+        <button type="button" class="boton boton--secundario" data-ir="pantalla-plantillas">Volver</button>
+        <button type="button" class="boton boton--secundario" id="guardar-documento-personalizado"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 3h12l4 4v14H3V3h2Z"/><path d="M7 3v6h10V3M7 21v-8h10v8"/></svg>Guardar</button>
+        <button type="button" class="boton boton--principal" id="descargar-documento-personalizado"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>Descargar PDF</button>
+        <button type="button" class="boton boton--secundario" id="imprimir-documento-personalizado"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7zM17 11h.01"/></svg>Imprimir</button>
+      </div>
+      <p class="ayuda-pdf">El documento se descargará en una sola página tamaño carta.</p>
+    </section>
+
+    <!-- PANTALLA 3: COMPLETAR Y REVISAR -->
+    <section id="pantalla-editor" class="pantalla" aria-labelledby="titulo-editor">
+      <h1 id="titulo-editor" tabindex="-1">Boleta para horas extras</h1>
+
+      <div class="editor">
+
+        <!-- Columna izquierda: formulario.
+             Solo se escriben los DATOS; el diseño de la boleta no se puede tocar. -->
+        <div class="editor__formulario">
+          <h2>Datos del documento</h2>
+          <form id="formulario-boleta" autocomplete="off" novalidate>
+
+            <fieldset class="opciones-texto">
+              <legend>Tamaño de letra</legend>
+              <div class="opciones-texto__niveles" role="radiogroup" aria-label="Tamaño de letra de los datos">
+                <label><input type="radio" name="texto-tamano" value="muy-pequeno"> Muy pequeño</label>
+                <label><input type="radio" name="texto-tamano" value="normal" checked> Normal</label>
+                <label><input type="radio" name="texto-tamano" value="grande"> Grande</label>
+                <label><input type="radio" name="texto-tamano" value="muy-grande"> Muy grande</label>
+              </div>
+              <label class="opciones-texto__negrita"><input type="checkbox" id="opcion-negrita"> Negrita</label>
+              <p>El texto se reduce automáticamente si no cabe en su línea.</p>
+            </fieldset>
+
+            <div class="campo-form">
+              <label for="in-funcionario">Funcionario (a)</label>
+              <input type="text" id="in-funcionario" maxlength="120">
+              <p class="form-aviso" id="aviso-funcionario" hidden>El texto no cabe completo en la línea. Acórtelo.</p>
+            </div>
+
+            <!-- Área: lista desplegable propia (js/selector.js).
+                 Las opciones se separan con "|" y se muestran en orden alfabético. -->
+            <div class="campo-form">
+              <label id="etq-area">Área</label>
+              <div class="selector" data-tipo="lista"
+                   data-opciones="Administración|Comunicación|Informática|Limpieza|Mercadeo|Plataforma|Secretarial|Transporte">
+                <input type="hidden" id="in-area">
+                <button type="button" class="selector__boton" aria-labelledby="etq-area" aria-haspopup="listbox" data-vacio="Elegir área"></button>
+              </div>
+            </div>
+
+            <div class="campo-form">
+              <label for="in-trabajo">Trabajo a realizar</label>
+              <input type="text" id="in-trabajo" maxlength="120">
+              <p class="form-aviso" id="aviso-trabajo" hidden>El texto no cabe completo en la línea. Acórtelo.</p>
+            </div>
+
+            <div class="campo-form">
+              <label for="in-justificacion">Justificación</label>
+              <input type="text" id="in-justificacion" maxlength="160">
+              <p class="form-aviso" id="aviso-justificacion" hidden>El texto no cabe completo en la línea. Acórtelo.</p>
+            </div>
+
+            <!-- Fecha y horas: selector propio (js/selector.js).
+                 El valor real queda en el campo oculto: "AAAA-MM-DD" o "HH:MM". -->
+            <div class="campo-form">
+              <label id="etq-fecha">Fecha</label>
+              <div class="selector" data-tipo="fecha">
+                <input type="hidden" id="in-fecha">
+                <button type="button" class="selector__boton" aria-labelledby="etq-fecha" aria-haspopup="dialog" data-vacio="Elegir fecha"></button>
+              </div>
+            </div>
+
+            <div class="campo-form campo-form--par">
+              <div>
+                <label id="etq-inicio">Hora de inicio</label>
+                <div class="selector selector--hora" data-tipo="hora">
+                  <input type="hidden" id="in-inicio">
+                  <input type="text" class="selector__hora-manual" data-hora-manual id="hora-manual-inicio" inputmode="numeric" maxlength="5" placeholder="HH:MM" aria-label="Escribir hora de inicio en formato de 24 horas" aria-describedby="aviso-inicio">
+                  <button type="button" class="selector__boton" aria-label="Abrir selector de hora de inicio" aria-haspopup="dialog" data-vacio="Elegir"></button>
+                </div>
+                <p class="form-aviso" id="aviso-inicio" hidden>Escriba cuatro dígitos válidos, por ejemplo 1630.</p>
+              </div>
+              <div>
+                <label id="etq-fin">Hora de finalización</label>
+                <div class="selector selector--hora" data-tipo="hora">
+                  <input type="hidden" id="in-fin">
+                  <input type="text" class="selector__hora-manual" data-hora-manual id="hora-manual-fin" inputmode="numeric" maxlength="5" placeholder="HH:MM" aria-label="Escribir hora de finalización en formato de 24 horas" aria-describedby="aviso-fin">
+                  <button type="button" class="selector__boton" aria-label="Abrir selector de hora de finalización" aria-haspopup="dialog" data-vacio="Elegir"></button>
+                </div>
+                <p class="form-aviso" id="aviso-fin" hidden>Escriba cuatro dígitos válidos, por ejemplo 1630.</p>
+              </div>
+            </div>
+
+            <p class="form-nota">
+              Las líneas de autorización del jefe inmediato y de Tesorería quedan en blanco
+              para las firmas físicas.
+            </p>
+          </form>
+        </div>
+
+        <!-- Columna derecha: vista previa.
+             La hoja es la misma que se imprime o se guarda como PDF. -->
+        <div class="editor__vista">
+          <h2>Vista previa</h2>
+
+          <div class="boleta-escala" id="boleta-escala">
+            <div class="hoja" id="boleta" role="button" tabindex="0" aria-label="Abrir vista final de la boleta">
+
+              <img class="b-logo" src="assets/logo-adep.jpeg" alt="Logotipo de ADEP">
+              <div class="b-titulo">Boleta para horas Extras</div>
+
+              <div class="f1">
+                <div class="b-etq">Funcionario (a):</div>
+                <div class="b-linea b-campo"><span class="b-campo__texto" id="b-funcionario"></span></div>
+              </div>
+
+              <div class="f2">
+                <div class="b-etq">Área:</div>
+                <div class="b-linea b-campo"><span class="b-campo__texto" id="b-area"></span></div>
+              </div>
+
+              <div class="f3">
+                <div class="b-etq">Trabajo a realizar:</div>
+                <div class="b-linea b-campo"><span class="b-campo__texto" id="b-trabajo"></span></div>
+              </div>
+
+              <div class="f4">
+                <div class="b-etq">Justificación</div>
+                <div class="b-linea b-campo"><span class="b-campo__texto" id="b-justificacion"></span></div>
+              </div>
+
+              <div class="f5">
+                <div class="b-etq">Fecha:</div>
+                <div class="b-linea b-campo"><span class="b-campo__texto" id="b-fecha"></span></div>
+              </div>
+
+              <div class="f6">
+                <div class="b-etq">Hora de Inicio:</div>
+                <div class="b-linea b-linea--inicio b-campo"><span class="b-campo__texto" id="b-inicio"></span></div>
+                <div class="b-etq b-etq--fin">Hora de Finalización</div>
+                <div class="b-linea b-linea--fin b-campo"><span class="b-campo__texto" id="b-fin"></span></div>
+              </div>
+
+              <div class="f7">
+                <div class="b-etq">Autorización Jefe Inmediato:</div>
+                <div class="b-linea"></div>
+              </div>
+
+              <div class="f8">
+                <div class="b-etq">Autorización Tesorería:</div>
+                <div class="b-linea"></div>
+              </div>
+
+              <div class="b-nota">Nota: Las horas extras no se pagarán si no tienen previa autorización.</div>
+              <div class="b-final"></div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="barra-acciones">
+        <button type="button" class="boton boton--secundario" data-ir="pantalla-plantillas">Volver</button>
+        <button type="button" id="btn-guardar" class="boton boton--secundario"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 3h12l4 4v14H3V3h2Z"/><path d="M7 3v6h10V3M7 21v-8h10v8"/></svg>Guardar</button>
+        <button type="button" id="btn-descargar" class="boton boton--principal"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>Descargar PDF</button>
+        <button type="button" id="btn-imprimir" class="boton boton--secundario"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7zM17 11h.01"/></svg>Imprimir</button>
+      </div>
+      <p class="ayuda-pdf">
+        El PDF se descargará directamente en este dispositivo.
+      </p>
+    </section>
+
+  </main>
+
+  <button type="button" class="boton-crear-plantilla-flotante" id="abrir-menu-crear" aria-label="Opciones para crear" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu-crear-flotante">
+    <svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+  <div class="crear-menu-flotante" id="menu-crear-flotante" role="dialog" aria-label="Opciones para crear" hidden>
+    <button type="button" class="crear-menu-flotante__opcion" data-ir="pantalla-plantillas"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5"/></svg>Crear documento</button>
+    <button type="button" class="crear-menu-flotante__opcion" id="crear-plantilla-flotante"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Crear plantilla</button>
+  </div>
+
+  <dialog id="dialogo-vista-previa" class="dialogo-vista-previa" aria-label="Vista final de la boleta">
+    <div class="dialogo-vista-previa__cabecera">
+      <h2>Vista final</h2>
+      <button type="button" class="dialogo-vista-previa__cerrar" id="cerrar-vista-previa" aria-label="Cerrar vista final"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m18 6-12 12M6 6l12 12"/></svg></button>
+    </div>
+    <div class="dialogo-vista-previa__controles" role="group" aria-label="Controles de ampliación">
+      <button type="button" class="dialogo-vista-previa__zoom" id="alejar-vista-previa" aria-label="Alejar"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4M8 11h6"/></svg></button>
+      <output class="dialogo-vista-previa__nivel" id="nivel-vista-previa" aria-live="off">100%</output>
+      <button type="button" class="dialogo-vista-previa__zoom" id="acercar-vista-previa" aria-label="Acercar"><svg class="icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4M11 8v6m-3-3h6"/></svg></button>
+      <button type="button" class="dialogo-vista-previa__ajustar" id="ajustar-vista-previa" aria-label="Ajustar la hoja a la pantalla">Ajustar</button>
+    </div>
+    <p class="dialogo-vista-previa__ayuda">Usa +/− o pellizca para ampliar; arrastra para recorrer.</p>
+    <div class="dialogo-vista-previa__area" id="area-vista-previa">
+      <div class="dialogo-vista-previa__escala" id="escala-vista-previa"></div>
+    </div>
+  </dialog>
+
+  <dialog id="dialogo-app" class="dialogo-app" aria-labelledby="dialogo-titulo" aria-describedby="dialogo-mensaje">
+    <form method="dialog" class="dialogo-app__contenido">
+      <h2 id="dialogo-titulo"></h2>
+      <p id="dialogo-mensaje"></p>
+      <div class="dialogo-app__acciones">
+        <button type="submit" class="boton boton--secundario" id="dialogo-cancelar" value="cancelar">Cancelar</button>
+        <button type="submit" class="boton boton--principal" id="dialogo-aceptar" value="aceptar">Aceptar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer class="pie-app">
+    <button type="button" class="boton-instalar" id="btn-instalar" aria-label="Instalar ADEP">
+      <svg class="boton-instalar__icono icono-ui" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3"/></svg>
+    </button>
+    <span class="pie-app__etiqueta">Instalar ADEP</span>
+    <p class="pie-app__estado" id="estado-instalacion" aria-live="polite"></p>
+  </footer>
+
+  <div id="estado-borrador" class="sr-only" aria-live="polite"></div>
+  <script src="js/vendor/html2canvas.min.js"></script>
+  <script src="js/vendor/jspdf.umd.min.js"></script>
+  <script src="js/iconos.js"></script>
+  <script src="js/dialogos.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/plantillas.js"></script>
+  <script src="js/boleta.js"></script>
+  <script src="js/selector.js"></script>
+  <script src="js/pdf.js"></script>
+  <script src="js/calibracion.js"></script>
+  <script src="js/pwa.js"></script>
+</body>
+</html>
